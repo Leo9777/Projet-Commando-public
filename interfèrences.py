@@ -4,7 +4,7 @@
 # In[3]:
 
 
-import numpy as np
+import numpy as np #nonactuel
 import matplotlib.pyplot as plt
 import matplotlib.colors
 
