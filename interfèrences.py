@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
-#Ca marche ?
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors
@@ -61,15 +55,7 @@ def wavelength_to_rgb(wavelength, gamma=0.8):
         B = 0.0
     return (R,G,B,A)
 
-
-# In[4]:
-
-
 wavelength_to_rgb(400, gamma=0.8)
-
-
-# In[5]:
-
 
 def make_color_map ( wavelength ):
     """ Return a LinearSegmentedColormap going from transparent to full intensity
@@ -94,9 +80,10 @@ plt. colorbar ()
 plt. gca (). set_facecolor ("0") # add a black background
 plt. show ()
 
+################################################################################################
 
-# In[131]:
-
+def sinc(x):
+    return np.sinc(x/np.pi)
 
 def I2(I0,d,a,X,lamb,f):
     c=(lamb*f)**(-1)
@@ -106,7 +93,7 @@ def I2(I0,d,a,X,lamb,f):
         for x in e:
             
             if x!=0:
-                y.append(I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(np.sinc(2*np.pi*x*c*a/2))**2)
+                y.append(I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(sinc(2*np.pi*x*c*a/2))**2)
             else:
                 y.append(y[len(y)-1])
         In.append(y)
@@ -119,7 +106,7 @@ def I(I0,d,a,X,lamb,f):
     y=[]
     for x in X:
         if x!=0:
-            y.append(I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(np.sinc(2*np.pi*x*c*a/2))**2)
+            y.append(I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(sinc(2*np.pi*x*c*a/2))**2)
         else:
             y.append(I0)
     return y
@@ -182,7 +169,7 @@ plt. show ()
 #esssais de fonctions
 #z_red = (I0/2)*(1+np.cos((2*d*np.pi*x)/(lamb*f))*np.cos((2*d*np.pi*y)/(lamb*f)))
 #z_red = I0*((np.sin(np.pi*d*x/(lamb*f))*np.sin(np.pi*d*y/(lamb*f)))/((np.pi*d*y/(lamb*f))*np.pi*d*x/(lamb*f)))
-#z_red = I0*(np.sinc((np.pi*d*x)/(lamb*f))*np.sinc((np.pi*d*y)/(lamb*f)))
+#z_red = I0*(sinc((np.pi*d*x)/(lamb*f))*sinc((np.pi*d*y)/(lamb*f)))
 #z = (I0/2)*(1+np.cos((2*d*np.pi*y)/(lamb*f)))
-#z_red=I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(np.sinc(2*np.pi*x*c*a/2))**2
+#z_red=I0*(np.sin(2*np.pi*N*x*c*d/2)/(N*np.sin(2*np.pi*x*c*d/2)))**2*(sinc(2*np.pi*x*c*a/2))**2
 
