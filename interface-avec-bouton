@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May 21 11:59:44 2021
+
+@author: mwa
+"""
+import matplotlib.pyplot as pp
+from mpl_toolkits.mplot3d import Axes3D
+import mpmath
+import numpy as np
+from tkinter import *
+from PIL import Image, ImageTk
+
+#Quand le bouton est pressé, on met à jour les valeurs
+def trace_graphe1():
+    x = np.linspace(0,100)
+    fig = pp.figure()
+    pp.plot(x, int(scale.get())*x*x)
+    pp.savefig("fig1.png")
+    render = ImageTk.PhotoImage(Image.open("fig1.png"))
+    img = Label(fenetre, image=render)
+    img.image = render
+    img.grid(column=0, row=0)
+    
+    selection = "Longueur d'onde = " + str(scale.get()) + " nm"
+    tex1.config(text = selection)
+    
+fenetre = Tk()
+
+
+frame_HG = Frame(fenetre)
+frame_HD = Frame(fenetre)
+frame_BG = Frame(fenetre)
+frame_BD = Frame(fenetre)
+frame_HG.grid(column=0, row=0)
+frame_HD.grid(column=0, row=1)
+frame_BG.grid(column=1, row=0)
+frame_BD.grid(column=1, row=1)
+
+
+bouton = Button(frame_HD, text='Changer valeur', command = trace_graphe1)
+bouton.grid(column=2, row=0)
+
+scale = Scale(frame_HD, orient=HORIZONTAL)
+
+a = scale.get()
+scale.grid(column=0, row=0)
+
+tex1 = Label(frame_HD)
+tex1.grid(column=1, row=0)
+
+
+
+
+fenetre.mainloop()
