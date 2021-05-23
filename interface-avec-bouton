@@ -1,7 +1,5 @@
 
 
-#PROBLEMES LORS DU REDIMENSIONNEMENT DE LA FENETRE
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -39,18 +37,21 @@ class Images():
         pp.imshow(X+Y)
         pp.savefig("fig2.png")
         
-        new_img = ImageTk.PhotoImage(Image.open("fig2.png"))
+        new_img = ImageTk.PhotoImage(Image.open("fig2.png"), size="432x188")
         img = Label(self.parent, image=new_img)
         img.image = new_img
         img.grid(column=0, row=0)
+
   
 def clic():
     interferences.trace_figures()
     profil.trace_graphe()
+
   
 
 
 fenetre = Tk()
+fenetre.geometry("580x658")
 fenetre.resizable(width=0, height=0)
 
 frame_HG = Frame(fenetre)
@@ -63,9 +64,6 @@ frame_BG.grid(column=0, row=1)
 
 interferences = Images(frame_HG, 50)
 profil = Images(frame_BG, 50)
-
-
-
 
 scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130)
 scale_lambda.grid(column=0, row=0)
@@ -87,5 +85,8 @@ txt_contraste.grid(column=0, row=5)
 
 bouton = Button(frame_HD, text='Changer valeur', command = clic)
 bouton.grid(column=0, row=6)
+
+interferences.trace_figures()
+profil.trace_graphe()
 
 fenetre.mainloop()
