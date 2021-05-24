@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -8,8 +6,6 @@ Created on Sun May 23 14:55:06 2021
 @author: mwa
 """
 import matplotlib.pyplot as pp
-from mpl_toolkits.mplot3d import Axes3D
-import mpmath
 import numpy as np
 from tkinter import *
 from PIL import Image, ImageTk
@@ -25,7 +21,7 @@ class Images():
         pp.plot(x, int(scale_nombre_fentes.get())*x*x)
         pp.savefig("fig1.png")
         
-        new_img = ImageTk.PhotoImage(Image.open("fig1.png"))
+        new_img = ImageTk.PhotoImage(Image.open("fig1.png").resize((432,288), Image.ANTIALIAS))
         img = Label(self.parent, image=new_img)
         img.image = new_img
         img.grid(column=0, row=0)
@@ -37,7 +33,7 @@ class Images():
         pp.imshow(X+Y)
         pp.savefig("fig2.png")
         
-        new_img = ImageTk.PhotoImage(Image.open("fig2.png"), size="432x188")
+        new_img = ImageTk.PhotoImage(Image.open("fig2.png").resize((432,288), Image.ANTIALIAS))
         img = Label(self.parent, image=new_img)
         img.image = new_img
         img.grid(column=0, row=0)
