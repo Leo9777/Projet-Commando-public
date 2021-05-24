@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May 23 14:55:06 2021
+#!/usr/bin/env python
+# coding: utf-8
 
-@author: mwa
-"""
+# In[1]:
+
 
 import numpy as np
-from tkinter import *
-from PIL import Image, ImageTk
-import matplotlib.pyplot as pp
+import matplotlib.pyplot as plt
 import matplotlib.colors
 from matplotlib import cm
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
@@ -68,6 +64,9 @@ def wavelength_to_rgb(wavelength, gamma=0.8):
     return (R,G,B,A)
 
 
+# In[2]:
+
+
 def make_color_map ( wavelength ):
     """ Return a LinearSegmentedColormap going from transparent to full intensity
     for a wavelength given in nanometer .
@@ -76,6 +75,15 @@ def make_color_map ( wavelength ):
     R, G, B, A = wavelength_to_rgb ( wavelength )
     colors = [(R,G,B,c) for c in np. linspace (0 ,1 ,100)]
     return matplotlib.colors.LinearSegmentedColormap . from_list ("mycmap ", colors )
+
+
+# In[5]:
+
+
+from matplotlib import cm
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 
 def sinc(x):
     return np.sinc(x/np.pi)
@@ -91,7 +99,7 @@ def I(I0,d,a,X,lamb,f,N,theta):
     return y
 
 class interference:
-    
+
     def __init__(self,a,d,lamb,f,N,theta):
         self.a=a
         self.d=d
@@ -105,19 +113,19 @@ class interference:
         ordre=(n*self.lamb*self.f/self.a)
         self.ordre=ordre
         self.wv = self.lamb*10**9
-        
+
     def graphe_intensite(self):
         X=np.linspace(-self.ordre,self.ordre,1000)
         In=I(self.I0,self.d,self.a,X,self.lamb,self.f,self.N,self.theta)
         return X,In
-    
+
     def figure(self):
         X,I=self.graphe_intensite()
         y,x=np.meshgrid(I,X)
         comap=make_color_map(self.wv)
         extent=[-self.ordre,self.ordre,-self.ordre,self.ordre]
         return y, comap, extent
-    
+
     def colorbar(self):
         R, G, B, A = wavelength_to_rgb (self.wv)
         colors = [(0, 0, 0), (R, G, B)]
@@ -126,93 +134,29 @@ class interference:
         return cmappable
 
 
-class Images():
-    def __init__(self, lambda_=600*10**(-9), a=10*10**(-6),d=50*10**(-6),f=1,N=2,theta=0):
-        self.interferences = interference(a, d, lambda_,f, N, theta)
 
-    def update_var(self):
-        self.interferences.lamb = float(scale_lambda.get()*10**(-9))
-        self.interferences.a = float(scale_taille_fentes.get()*10**(-6))
-        self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
-        self.interferences.f = float(scale_focale.get()/100)
-        self.interferences.N = int(scale_nombre_fentes.get())
-        self.interferences.theta = float(scale_angle.get())
+#Exemple de l'utilisation de la classe  
+inte=interference(10*10**(-6),50*10**(-6),550*10**(-9),1,2,0 )
 
-    def trace_graphe(self, parent, longueur=0, largeur=0):
-        X,Ig = self.interferences.graphe_intensite()
+#Récupération des données nécessaires à l'affichage du graphique
+X,Ig=inte.graphe_intensite()
+#Récupération des données nécessaires à l'affichage de la figure
+y,comap,extent=inte.figure()
 
-        fig = pp.figure()
-        pp.plot(X, Ig)
-        pp.savefig("fig1.png")
-        
-        new_img = ImageTk.PhotoImage(Image.open("fig1.png").resize((432,288), Image.ANTIALIAS))
-        img = Label(parent, image=new_img)
-        img.image = new_img
-        img.grid(column=0, row=0)
-        
-    def trace_figures(self, parent, longueur=0, largeur=0):
-        y,comap,extent = self.interferences.figure()
-        
-        fig, ax = pp.subplots()
-        ax.imshow(y,cmap=comap, extent=extent)
-        ax.yaxis.set_visible(False)
-        pp.xlabel("Position sur l'écran (m)")
-        pp.colorbar(self.interferences.colorbar())#Affichage de la colorbar grâce à la classe
-        pp. gca (). set_facecolor ("0")
-        pp.savefig("fig2.png")
-        
-        new_img = ImageTk.PhotoImage(Image.open("fig2.png").resize((432,288), Image.ANTIALIAS))
-        img = Label(parent, image=new_img)
-        img.image = new_img
-        img.grid(column=0, row=0)
+#Affichage du graphique
+plt.figure()
+plt.xlabel("Position sur l'écran (m)")
+plt.ylabel("Intensité lumineuse")
+plt.plot(X,Ig)
+plt.show()
 
-  
-def clic():
-    affichage.update_var()
-    affichage.trace_figures(frame_HG)
-    affichage.trace_graphe(frame_BG)
+#Affichage de la figure 
+fig, ax = plt.subplots()
+ax.imshow(y,cmap=comap, extent=extent)
+ax.yaxis.set_visible(False)
+plt.xlabel("Position sur l'écran (m)")
 
-  
+plt.colorbar(inte.colorbar())#Affichage de la colorbar grâce à la classe
 
-
-fenetre = Tk()
-fenetre.geometry("580x688")
-fenetre.resizable(width=0, height=0)
-
-frame_HG = Frame(fenetre)
-frame_HD = Frame(fenetre)
-frame_BG = Frame(fenetre)
-frame_HG.grid(column=0, row=0)
-frame_HD.grid(column=1, row=0)
-frame_BG.grid(column=0, row=1)
-
-affichage = Images()
-
-scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
-scale_lambda.grid(column=0, row=0)
-
-scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=130, from_=1, to=100)
-scale_nombre_fentes.grid(column=0, row=1)
-
-scale_taille_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes", length=130, from_=1, to=1000)
-scale_taille_fentes.grid(column=0, row=2)
-
-scale_distance_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Distance interfentes", length=130, from_=10, to=1000, resolution=10)
-scale_distance_fentes.grid(column=0, row=3)
-
-scale_angle = Scale(frame_HD, orient=HORIZONTAL, label="Angle", length=130)
-scale_angle.grid(column=0, row=4)
-
-scale_focale = Scale(frame_HD, orient=HORIZONTAL, label="Distance focale [cm]", length=130, from_=40, to=160)
-scale_focale.grid(column=0, row=5)
-
-txt_contraste = Label(frame_HD, text="Contraste: []")
-txt_contraste.grid(column=0, row=6)
-
-bouton = Button(frame_HD, text='Changer valeur', command = clic)
-bouton.grid(column=0, row=7)
-
-affichage.trace_figures(frame_HG)
-affichage.trace_graphe(frame_BG)
-
-fenetre.mainloop()
+plt. gca (). set_facecolor ("0")
+plt. show()
