@@ -127,7 +127,7 @@ class interference:
 
 
 class Images():
-    def __init__(self, lambda_=800*10**(-9), a=10*10**(-6),d=50*10**(-6),f=1,N=2,theta=0):
+    def __init__(self, lambda_=550*10**(-9), a=10*10**(-6),d=50*10**(-6),f=1,N=2,theta=0):
         self.interferences = interference(a, d, lambda_,f, N, theta)
 
     def update_var(self):
@@ -137,6 +137,11 @@ class Images():
         self.interferences.f = float(scale_focale.get()/100)
         self.interferences.N = int(scale_nombre_fentes.get())
         self.interferences.theta = float(scale_angle.get())
+        n=2
+        I0=1
+        self.interferences.wv = self.interferences.lamb*10**9
+        ordre=(n*self.interferences.lamb*self.interferences.f/self.interferences.a)
+        self.interferences.ordre=ordre
 
     def trace_graphe(self, parent, longueur=0, largeur=0):
         X,Ig = self.interferences.graphe_intensite()
