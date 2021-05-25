@@ -96,7 +96,7 @@ def I(I0,d,a,X,lamb,f,N,theta):
         if x!=0:
             y.append(I0*(np.sin(c*N*(x-f*np.sin(theta))*d/2)/(N*np.sin(c*(x-f*np.sin(theta))*d/2)))**2*(sinc(c*(x-f*np.sin(theta))*a/2))**2)
         else:
-            y.append(I0)
+            y.append(y[len(y-1)])
     return y
 
 #Paramètres
