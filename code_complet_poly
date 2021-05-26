@@ -91,36 +91,29 @@ def I(I0,d,a,X,lamb,f,N,theta):
 
 class interference:
     
-    def __init__(self,a,d,lamb,f,N,theta):
-        self.a=a
-        self.d=d
-        self.lamb=lamb
-        self.f=f
-        self.N=N
-        self.theta=theta
-        n=2
-        I0=1
-        self.I0=I0
-        ordre=(n*self.lamb*self.f/self.a)
-        self.ordre=ordre
-        self.wv = self.lamb*10**9
-        
-    def graphe_intensite(self, lamb=0):
-        if lamb == 0:
-            lamb = self.lamb
-        X=np.linspace(-self.ordre,self.ordre,1000)
-        In=I(self.I0,self.d,self.a,X,lamb,self.f,self.N,self.theta)
+    def __init__(self):
+        self.a=0
+        self.d=0
+        self.f=0
+        self.N=0
+        self.theta=0
+            
+    def graphe_intensite(self, lamb, I0=1):
+        ordre = 2*lamb*self.f/self.a
+        X=np.linspace(-ordre,ordre,1000)
+        In=I(I0,self.d,self.a,X,lamb,self.f,self.N,self.theta)
         return X,In
     
-    def figure(self):
-        X,I=self.graphe_intensite()
+    def figure(self, lamb, I0=1):
+        ordre = 2*lamb*self.f/self.a
+        X,I=self.graphe_intensite(lamb, I0)
         y,x=np.meshgrid(I,X)
         comap=make_color_map(self.wv)
-        extent=[-self.ordre,self.ordre,-self.ordre,self.ordre]
+        extent=[-ordre,ordre,-ordre,ordre]
         return y, comap, extent
     
-    def colorbar(self):
-        R, G, B, A = wavelength_to_rgb (self.wv)
+    def colorbar(self, wv):
+        R, G, B, A = wavelength_to_rgb (wv)
         colors = [(0, 0, 0), (R, G, B)]
         cm = LinearSegmentedColormap.from_list("Custom", colors, N=100)
         cmappable = ScalarMappable(norm=Normalize(0,1), cmap=cm)
@@ -128,28 +121,21 @@ class interference:
 
 
 class Images():
-    def __init__(self, lambda_=550*10**(-9), a=10*10**(-6),d=50*10**(-6),f=1,N=2,theta=0):
-        self.interferences = interference(a, d, lambda_,f, N, theta)
+    def __init__(self):
+        self.sequence = 0
+        self.interferences = interference()
+        self.lamb = []
         self.fig_graph = pp.figure(1)
         self.fig_fig = pp.figure(2)
 
     def update_var(self):
-        self.interferences.lamb = float(scale_lambda.get()*10**(-9))
         self.interferences.a = float(scale_taille_fentes.get()*10**(-6))
         self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
         self.interferences.f = float(scale_focale.get()/100)
         self.interferences.N = int(scale_nombre_fentes.get())
         self.interferences.theta = float(scale_angle.get())
-        n=2
-        I0=1
-        self.interferences.wv = self.interferences.lamb*10**9
-        ordre=(n*self.interferences.lamb*self.interferences.f/self.interferences.a)
-        self.interferences.ordre=ordre
 
-    def trace_graphe(self, parent, lamb=0, largeur=0):
-        if lamb == 0:
-            lamb = self.interferences.lamb
-            
+    def trace_graphe(self, parent, lamb, largeur=0):
         X,Ig = self.interferences.graphe_intensite(lamb)
         
         pp.figure(1)
@@ -161,14 +147,14 @@ class Images():
         img.image = new_img
         img.grid(column=0, row=0)
         
-    def trace_figures(self, parent):
-        y,comap,extent = self.interferences.figure()
+    def trace_figures(self, parent, lamb=0):
+        y,comap,extent = self.interferences.figure(lamb)
         
         fig, ax = pp.subplots()
         ax.imshow(y,cmap=comap, extent=extent)
         ax.yaxis.set_visible(False)
         pp.xlabel("Position sur l'écran (m)")
-        pp.colorbar(self.interferences.colorbar())#Affichage de la colorbar grâce à la classe
+        pp.colorbar(self.interferences.colorbar(lamb*10**9))#Affichage de la colorbar grâce à la classe
         pp. gca (). set_facecolor ("0")
         pp.savefig("fig2.png")
         
@@ -180,33 +166,56 @@ class Images():
 class Interface_onde():
     def __init__(self):
         self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes", length=130, from_=1, to=1000)
-        self.lambda_tab = []
         
     def param_onde(self):
         bouton.grid(column=0, row=10)
+        bouton_supp.grid(column=0, row=11)
         self.curseur_lambda.grid(column=0, row=8)
         bouton_onde.configure(text="C'est OK pour moi", command=self.add_onde)
         
 
     def add_onde(self):
-        lamb=int(self.curseur_lambda.get())*10**(-9)
-        bouton_onde.configure(text='Ajouter une onde', command = self.param_onde)
-        affichage.trace_graphe(frame_BG, lamb=lamb)
-        self.lambda_tab.append(lamb)
-        self.curseur_lambda.grid_forget()
+        if affichage.sequence == 0:
+            lamb=int(self.curseur_lambda.get())*10**(-9)
+            bouton_onde.configure(text='Ajouter une onde', command = self.param_onde)
+            affichage.lamb.append(lamb)
+            self.curseur_lambda.grid_forget()
+            
+            longueur_onde = 1
+            
+        else:
+            lamb=int(self.curseur_lambda.get())*10**(-9)
+            bouton_onde.configure(text='Ajouter une onde', command = self.param_onde)
+            affichage.update_var()
+            affichage.trace_graphe(frame_BG, lamb=lamb)
+            affichage.lamb.append(lamb)
+            print(affichage.lamb)
+            self.curseur_lambda.grid_forget()
+        
   
 def simulation():
-    affichage.fig_graph.clf()
-    affichage.fig_fig.clf()
-    affichage.update_var()
-    affichage.trace_figures(frame_HG)
-    affichage.trace_graphe(frame_BG)
+    if len(affichage.lamb) == 0:
+        print("Veuillez choisir")
     
+    else:
+        if affichage.sequence == 0:
+            affichage.sequence = 1
+            fenetre.geometry("580x728")
+        
+        affichage.update_var()
+        for x in affichage.lamb:
+            #affichage.trace_figures(frame_HG, x)
+            affichage.trace_graphe(frame_BG, x)
+    
+def effacer():
+        affichage.lamb = []
+        print(affichage.lamb)
+        affichage.fig_graph.clf()
 
-
+first_button_active = 1
 
 fenetre = Tk()
-fenetre.geometry("580x728")
+fenetre.geometry("180x728")
 fenetre.resizable(width=0, height=0)
 
 frame_HG = Frame(fenetre)
@@ -245,12 +254,12 @@ txt_contraste.grid(column=0, row=6)
 bouton_onde= Button(frame_HD, text='Ajouter une onde', command = interface_onde.param_onde)
 bouton_onde.grid(column=0, row=7)
 
-bouton = Button(frame_HD, text='Simuler!', command = simulation)
+bouton = Button(frame_HD, text='Nouvelle simulation', command = simulation)
 bouton.grid(column=0, row=8)
 
+bouton_supp = Button(frame_HD, text='Effacer mémoire', command = effacer)
+bouton.grid(column=0, row=9)
 
 
-affichage.trace_figures(frame_HG)
-affichage.trace_graphe(frame_BG)
 
 fenetre.mainloop()
