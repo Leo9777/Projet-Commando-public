@@ -171,13 +171,13 @@ class Interface_onde():
         bouton.grid(column=0, row=10)
         bouton_supp.grid(column=0, row=11)
         self.curseur_lambda.grid(column=0, row=8)
-        bouton_onde.configure(text="C'est OK pour moi", command=self.add_onde)
+        bouton_onde.configure(text="Ajouter", command=self.add_onde)
         
 
     def add_onde(self):
         if affichage.sequence == 0:
             lamb=int(self.curseur_lambda.get())*10**(-9)
-            bouton_onde.configure(text='Ajouter une onde', command = self.param_onde)
+            bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)
             affichage.lamb.append(lamb)
             self.curseur_lambda.grid_forget()
             
@@ -185,7 +185,7 @@ class Interface_onde():
             
         else:
             lamb=int(self.curseur_lambda.get())*10**(-9)
-            bouton_onde.configure(text='Ajouter une onde', command = self.param_onde)
+            bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)
             affichage.update_var()
             affichage.trace_graphe(frame_BG, lamb=lamb)
             affichage.lamb.append(lamb)
@@ -251,7 +251,7 @@ scale_focale.grid(column=0, row=5)
 txt_contraste = Label(frame_HD, text="Contraste: []")
 txt_contraste.grid(column=0, row=6)
 
-bouton_onde= Button(frame_HD, text='Ajouter une onde', command = interface_onde.param_onde)
+bouton_onde= Button(frame_HD, text='Nouvelle onde', command = interface_onde.param_onde)
 bouton_onde.grid(column=0, row=7)
 
 bouton = Button(frame_HD, text='Nouvelle simulation', command = simulation)
