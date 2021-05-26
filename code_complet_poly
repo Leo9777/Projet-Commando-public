@@ -165,7 +165,7 @@ class Images():
 
 class Interface_onde():
     def __init__(self):
-        self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes", length=130, from_=1, to=1000)
+        self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=1, to=1000)
         
     def param_onde(self):
         bouton.grid(column=0, row=10)
