@@ -127,10 +127,13 @@ class interference:
 
 
 class Images():
+    #On dote la classe d'une sous-classe avec les mêmes caractéristiques de "interference"
     def __init__(self, lambda_=550*10**(-9), a=10*10**(-6),d=50*10**(-6),f=1,N=2,theta=0):
         self.interferences = interference(a, d, lambda_,f, N, theta)
-
+        
+    #Ceci met à jour chaque variables de "interference" en fonction de comment l'utilisateur souhaite paramétrer l'onde lumineuse
     def update_var(self):
+        #Les valeurs sont changés en fonction de ce que l'utilisateur choisit comme valeur dans les barres de défilement
         self.interferences.lamb = float(scale_lambda.get()*10**(-9))
         self.interferences.a = float(scale_taille_fentes.get()*10**(-6))
         self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
@@ -142,7 +145,8 @@ class Images():
         self.interferences.wv = self.interferences.lamb*10**9
         ordre=(n*self.interferences.lamb*self.interferences.f/self.interferences.a)
         self.interferences.ordre=ordre
-
+       
+    #On enregistre un cliché en format png du tracé de l'intensité en fonction de la position sur l'écran
     def trace_graphe(self, parent, longueur=0, largeur=0):
         X,Ig = self.interferences.graphe_intensite()
 
@@ -154,7 +158,8 @@ class Images():
         img = Label(parent, image=new_img)
         img.image = new_img
         img.grid(column=0, row=0)
-        
+    
+    #On enregistre un cliché en format png de la figure de diffraction
     def trace_figures(self, parent, longueur=0, largeur=0):
         y,comap,extent = self.interferences.figure()
         
@@ -162,7 +167,7 @@ class Images():
         ax.imshow(y,cmap=comap, extent=extent)
         ax.yaxis.set_visible(False)
         pp.xlabel("Position sur l'écran (m)")
-        pp.colorbar(self.interferences.colorbar())#Affichage de la colorbar grâce à la classe
+        pp.colorbar(self.interferences.colorbar()) #Affichage de la colorbar grâce à la classe
         pp. gca (). set_facecolor ("0")
         pp.savefig("fig2.png")
         
@@ -171,19 +176,18 @@ class Images():
         img.image = new_img
         img.grid(column=0, row=0)
 
-  
+#Fonction appelée lorsque l'utilisateur clique sur un bouton
 def clic():
     affichage.update_var()
     affichage.trace_figures(frame_HG)
     affichage.trace_graphe(frame_BG)
 
-  
-
-
+#Création de la fenêtre d'affichage
 fenetre = Tk()
 fenetre.geometry("580x688")
 fenetre.resizable(width=0, height=0)
 
+#Division de la fenêtre d'affichage en "widgets"
 frame_HG = Frame(fenetre)
 frame_HD = Frame(fenetre)
 frame_BG = Frame(fenetre)
@@ -191,8 +195,10 @@ frame_HG.grid(column=0, row=0)
 frame_HD.grid(column=1, row=0)
 frame_BG.grid(column=0, row=1)
 
+#On associe l'affichage à la classe Images
 affichage = Images()
 
+#Dans la suite, on établit les barres de défilement servant à régler chaque paramètre de la figure d'interférences
 scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
 scale_lambda.grid(column=0, row=0)
 
@@ -214,9 +220,11 @@ scale_focale.grid(column=0, row=5)
 txt_contraste = Label(frame_HD, text="Contraste: []")
 txt_contraste.grid(column=0, row=6)
 
+#On créer un bouton permettant de mettre à jour les figures après avoir changé les paramètres
 bouton = Button(frame_HD, text='Changer valeur', command = clic)
 bouton.grid(column=0, row=7)
 
+#On affiche les images dans la fenêtre
 affichage.trace_figures(frame_HG)
 affichage.trace_graphe(frame_BG)
 
