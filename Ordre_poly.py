@@ -218,9 +218,7 @@ def simulation():
             fenetre.geometry("580x728")
         
         affichage.update_var()
-        leng=len(affichage.lamb)
         ordre_poly=affichage.interferences.ordrepoly(affichage.lamb)
-        print(ordre_poly)
         for x in affichage.lamb:
             #affichage.trace_figures(frame_HG, x)
             affichage.trace_graphe(frame_BG, x,ordre_poly)
