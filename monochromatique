@@ -186,7 +186,7 @@ def clic():
 fenetre = Tk()
 fenetre.geometry("640x728")
 fenetre.resizable(width=0, height=0)
-fenetre.title("")
+fenetre.title("Cas monochromatique")
 
 #Division de la fenêtre d'affichage en "widgets"
 frame_HG = Frame(fenetre)
