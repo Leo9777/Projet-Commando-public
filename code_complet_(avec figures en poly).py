@@ -132,7 +132,7 @@ class interference:
         cmappable = ScalarMappable(norm=Normalize(0,1), cmap=cm)
         return cmappable
 
-
+#Classe de gestion de l'affichage de la courbe d'intensité et de la figure d'interférences, permet le lien entre l'interface et le modèle physique à afficher
 class Images():
     def __init__(self):
         self.sequence = 0
@@ -141,13 +141,15 @@ class Images():
         self.fig_graph = pp.figure(1)
         self.fig_fig = pp.figure(2)
 
+    #Mise à jour de tous les paramètres de l'expérience SAUF la longueur d'onde qui est gérée indépendamment par la classe Interface_onde
     def update_var(self):
         self.interferences.a = float(scale_taille_fentes.get()*10**(-6))
         self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
         self.interferences.f = float(scale_focale.get()/100)
         self.interferences.N = int(scale_nombre_fentes.get())
         self.interferences.theta = float(np.radians(scale_angle.get()))
-
+    
+    #Tracé du graphe: on récupère l'image générée par Matplotlib et on l'affiche dans un conteneur qui sera défini plus bas, dans le corps du programme
     def trace_graphe(self, parent,lamb,ordre_poly=0, largeur=0):
         alpha=0.4
         if len(affichage.lamb)==1:
@@ -164,7 +166,8 @@ class Images():
         img = Label(parent, image=new_img)
         img.image = new_img
         img.grid(column=0, row=0)
-        
+    
+    #Pareil mais pour les figures d'interférences
     def trace_figures(self, parent,lamb=0,ordre_poly=0):
         alpha=0.4
         if len(affichage.lamb)==1:
@@ -239,7 +242,9 @@ def affiche_sch():
 fenetre = Tk()
 fenetre.geometry("200x528")
 fenetre.resizable(width=0, height=0)
+fenetre.title("Super logiciel de simulation d'interférences")
 
+#Création de 4 "conteneurs" correspondant à une découpage en 4 de la fenetre; permet de gérer l'agencement de notre fenetre
 frame_HG = Frame(fenetre)
 frame_HD = Frame(fenetre)
 frame_BG = Frame(fenetre)
@@ -248,13 +253,11 @@ frame_HG.grid(column=0, row=0)
 frame_HD.grid(column=1, row=0)
 frame_BG.grid(column=0, row=1)
 
+#Création des objets que l'on va manipuler
 affichage = Images()
 interface_onde = Interface_onde()
 
-
-#scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
-#scale_lambda.grid(column=0, row=0)
-
+#On va maintenant créer et placer tous les éléments de l'interface graphique
 scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=190, from_=1, to=10)
 scale_nombre_fentes.grid(column=0, row=1)
 
