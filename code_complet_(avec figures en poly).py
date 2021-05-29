@@ -212,8 +212,6 @@ class Interface_onde():
         affichage.update_var()
         affichage.lamb.append(lamb)
         simulation()
-        print(affichage.lamb)
-            
         bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)    
         self.curseur_lambda.grid_forget()
         
