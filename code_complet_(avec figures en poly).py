@@ -76,9 +76,11 @@ def make_color_map ( wavelength ):
     colors = [(R,G,B,c) for c in np. linspace (0 ,1 ,100)]
     return matplotlib.colors.LinearSegmentedColormap . from_list ("mycmap ", colors )
 
+#Fonction définissant le sinus cardinal
 def sinc(x):
     return np.sinc(x/np.pi)
 
+#Fonction renvoyant l'intensité lumineuse en fonction des paramètres de l'expérience
 def I(I0,d,a,X,lamb,f,N,theta):
     c=2*np.pi/((f*lamb))
     y=[]
@@ -89,6 +91,7 @@ def I(I0,d,a,X,lamb,f,N,theta):
             y.append(I0)
     return y
 
+#Classe créant les graphiques d'intensités et figures d'interférences
 class interference:
     
     def __init__(self):
@@ -97,7 +100,8 @@ class interference:
         self.f=0
         self.N=0
         self.theta=0
-            
+
+    #Méthode créant le graphe de l'intensité       
     def graphe_intensite(self, lamb,ordre_poly=0, I0=1):
         ordre = 2*lamb*self.f/self.a
         if ordre_poly!=0:
@@ -105,7 +109,8 @@ class interference:
         X=np.linspace(-ordre,ordre,1000)
         In=I(I0,self.d,self.a,X,lamb,self.f,self.N,self.theta)
         return X,In
-    
+
+    #Méthode créant la figure d'interférence
     def figure(self, lamb,ordre_poly=0, I0=1):
         ordre = 2*lamb*self.f/self.a
         if ordre_poly!=0:
@@ -116,7 +121,7 @@ class interference:
         extent=[-ordre,ordre,-ordre,ordre]
         return y, comap, extent
 
-
+    #Méthode calculant l'ordre optimal du domaine de définition des graphes et figures pour plusieurs longueurs d'ondes 
     def ordrepoly(self,lamb_tab):
         ordre=[]
         for lamb in lamb_tab:
@@ -124,7 +129,7 @@ class interference:
         ordrepoly=np.mean(ordre)
         return ordrepoly
 
-    
+    #Méthode créant la colorbar (légende de couleur) pour la figure d'interférence
     def colorbar(self, wv):
         R, G, B, A = wavelength_to_rgb (wv)
         colors = [(0, 0, 0), (R, G, B)]
@@ -234,6 +239,7 @@ def effacer():
         print(affichage.lamb)
         affichage.fig_graph.clf()
 
+#Fonction appelée lorsque l'on clique sur le bouton "Afficher schéma", il permet d'ouvrir une nouvelle fenêtre pour afficher le schéma de l'expérience
 def affiche_sch():
     new_fen = Tk()
     new_fen.geometry("735x520")
