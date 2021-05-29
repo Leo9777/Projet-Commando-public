@@ -236,6 +236,13 @@ def effacer():
 
 def affiche_sch():
     new_fen = Tk()
+    new_fen.geometry("735x520")
+    new_fen.resizable(width=0, height=0)
+    im = Image.open("schema.jpg")
+    sch = ImageTk.PhotoImage(im, master = new_fen)
+    fond = Label(new_fen, image =sch)
+    fond.place(x=0,y=0, relwidth = 1, relheight=1)
+    new_fen.mainloop()
     
 
 #Création d'une nouvelle fenêtre, on fixe ses paramètres
