@@ -236,7 +236,6 @@ def simulation():
 #Fonction appelée lorsque l'on clique sur le bouton "Effacer mémoire", supprime les valeurs dans l'array des longueurs d'onde
 def effacer():
         affichage.lamb = []
-        print(affichage.lamb)
         affichage.fig_graph.clf()
 
 #Fonction appelée lorsque l'on clique sur le bouton "Afficher schéma", il permet d'ouvrir une nouvelle fenêtre pour afficher le schéma de l'expérience
