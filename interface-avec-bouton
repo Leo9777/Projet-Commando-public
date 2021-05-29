@@ -176,7 +176,7 @@ class Images():
         img.image = new_img
         img.grid(column=0, row=0)
 
-#Fonction appelée lorsque l'utilisateur clique sur un bouton
+#Fonction appelée lorsque l'utilisateur clique sur le bouton
 def clic():
     affichage.update_var()
     affichage.trace_figures(frame_HG)
