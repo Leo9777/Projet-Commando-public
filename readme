@@ -8,4 +8,4 @@ COMMENT EXECUTER LE PROGRAMME?
 Le notebook est une présentation du code brute de simulation, sans interface.
 
 UTILITE DU BOUTON "EFFACER MEMOIRE"
-  Ce bouton permet de supprimer les longueurs d'ondes enregistrées pour que le prochain tracé reparte à 0.
+  Ce bouton permet de supprimer les longueurs d'ondes enregistrées pour que le prochain tracé reparte de 0.
