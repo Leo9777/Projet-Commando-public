@@ -184,17 +184,19 @@ class Images():
         img.image = new_img
         img.grid(column=0, row=0)
 
+#Classe qui gère la création d'une nouvelle onde dont on va fixer la longueur via l'interface
 class Interface_onde():
     def __init__(self):
         self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde[nm´]", length=190, from_=400, to=800)
-        
+    
+    #Méthode appelée lorsque l'on clique sur le bouton "Nouvelle onde", elle crée un nouveau curseur et réagence l'interface
     def param_onde(self):
         bouton_supp.grid(column=0, row=8)
         bouton_schéma.grid(column=0, row=9)
         self.curseur_lambda.grid(column=0, row=7)
         bouton_onde.configure(text="Valider", command=self.add_onde)
         
-
+    #Permet de valider la création d'une nouvelle onde lorsque l'on appuie sur le bouton "Valider". Ajoute la longueur d'onde sélectionnée à un array contenant toutes les valeurs de longueur d'onde
     def add_onde(self):
         lamb=int(self.curseur_lambda.get())*10**(-9)
         affichage.lamb.append(lamb)
@@ -207,7 +209,7 @@ class Interface_onde():
         bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)    
         self.curseur_lambda.grid_forget()
         
-  
+#Met à jour l'affichage des courbes à condition que l'on aie des valeurs dans l'array de longueurs d'ondes
 def simulation():
     if len(affichage.lamb) == 0:
         print("Veuillez choisir")
