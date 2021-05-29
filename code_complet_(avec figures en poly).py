@@ -224,7 +224,8 @@ def simulation():
         for x in affichage.lamb:
             affichage.trace_graphe(frame_BG, x,ordre_poly)
         affichage.trace_figures(frame_HG,x,ordre_poly)
-    
+
+#Fonction appelée lorsque l'on clique sur le bouton "Effacer mémoire", supprime les valeurs dans l'array des longueurs d'onde
 def effacer():
         affichage.lamb = []
         print(affichage.lamb)
@@ -234,7 +235,7 @@ def affiche_sch():
     new_fen = Tk()
     
 
-
+#Création d'une nouvelle fenêtre, on fixe ses paramètres
 fenetre = Tk()
 fenetre.geometry("200x528")
 fenetre.resizable(width=0, height=0)
