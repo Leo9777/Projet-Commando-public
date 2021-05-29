@@ -2,7 +2,7 @@ COMMENT EXECUTER LE PROGRAMME?
 1.VERSION MONOCHROMATIQUE:
   Télécharger le fichier monochromatique.py et l'executer dans votre IDE
 2.VERSION POLYCHROMATIQUE:
-  Télécharger les fichiers polychromatique.py et schéma.jpg dans un même dossier, puis executer polychromatique.py dans votre IDE
+  Télécharger les fichiers polychromatique.py et schema.png dans un même dossier, puis executer polychromatique.py dans votre IDE
 
 
 Le notebook est une présentation du code brute de simulation, sans interface.
