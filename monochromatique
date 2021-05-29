@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun May 23 14:55:06 2021
-
 @author: mwa
 """
 
@@ -139,7 +138,7 @@ class Images():
         self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
         self.interferences.f = float(scale_focale.get()/100)
         self.interferences.N = int(scale_nombre_fentes.get())
-        self.interferences.theta = float(scale_angle.get())
+        self.interferences.theta = float(np.radians(scale_angle.get()))
         n=2
         I0=1
         self.interferences.wv = self.interferences.lamb*10**9
@@ -149,9 +148,10 @@ class Images():
     #On enregistre un cliché en format png du tracé de l'intensité en fonction de la position sur l'écran
     def trace_graphe(self, parent, longueur=0, largeur=0):
         X,Ig = self.interferences.graphe_intensite()
-
         fig = pp.figure()
         pp.plot(X, Ig)
+        pp.xlabel("Position sur l'écran (m)")
+        pp.ylabel("Intensité lumineuse (cd)")
         pp.savefig("fig1.png")
         
         new_img = ImageTk.PhotoImage(Image.open("fig1.png").resize((432,288), Image.ANTIALIAS))
@@ -184,8 +184,9 @@ def clic():
 
 #Création de la fenêtre d'affichage
 fenetre = Tk()
-fenetre.geometry("580x688")
+fenetre.geometry("640x728")
 fenetre.resizable(width=0, height=0)
+fenetre.title("")
 
 #Division de la fenêtre d'affichage en "widgets"
 frame_HG = Frame(fenetre)
@@ -199,26 +200,23 @@ frame_BG.grid(column=0, row=1)
 affichage = Images()
 
 #Dans la suite, on établit les barres de défilement servant à régler chaque paramètre de la figure d'interférences
-scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
+scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=190, from_=400, to=800)
 scale_lambda.grid(column=0, row=0)
 
-scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=130, from_=1, to=10)
+scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=190, from_=1, to=10)
 scale_nombre_fentes.grid(column=0, row=1)
 
-scale_taille_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes", length=130, from_=1, to=1000)
+scale_taille_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes [micron]", length=190, from_=1, to=1000)
 scale_taille_fentes.grid(column=0, row=2)
 
-scale_distance_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Distance interfentes", length=130, from_=10, to=1000, resolution=10)
+scale_distance_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Distance interfentes[micron]", length=190, from_=10, to=1000, resolution=10)
 scale_distance_fentes.grid(column=0, row=3)
 
-scale_angle = Scale(frame_HD, orient=HORIZONTAL, label="Angle", length=130)
+scale_angle = Scale(frame_HD, orient=HORIZONTAL, label="Angle [en °]", length=190,from_=0, to=85)
 scale_angle.grid(column=0, row=4)
 
-scale_focale = Scale(frame_HD, orient=HORIZONTAL, label="Distance focale [cm]", length=130, from_=40, to=160)
+scale_focale = Scale(frame_HD, orient=HORIZONTAL, label="Distance focale [cm]", length=190, from_=40, to=160)
 scale_focale.grid(column=0, row=5)
-
-txt_contraste = Label(frame_HD, text="Contraste: []")
-txt_contraste.grid(column=0, row=6)
 
 #On créer un bouton permettant de mettre à jour les figures après avoir changé les paramètres
 bouton = Button(frame_HD, text='Changer valeur', command = clic)
