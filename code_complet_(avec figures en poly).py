@@ -146,7 +146,7 @@ class Images():
         self.interferences.d = float(scale_distance_fentes.get()*10**(-6))
         self.interferences.f = float(scale_focale.get()/100)
         self.interferences.N = int(scale_nombre_fentes.get())
-        self.interferences.theta = float(scale_angle.get())
+        self.interferences.theta = float(np.radians(scale_angle.get()))
 
     def trace_graphe(self, parent,lamb,ordre_poly=0, largeur=0):
         alpha=0.4
@@ -186,32 +186,26 @@ class Images():
 
 class Interface_onde():
     def __init__(self):
-        self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
+        self.curseur_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde[nm´]", length=190, from_=400, to=800)
         
     def param_onde(self):
-        bouton.grid(column=0, row=10)
-        bouton_supp.grid(column=0, row=11)
-        self.curseur_lambda.grid(column=0, row=8)
+        bouton_supp.grid(column=0, row=8)
+        bouton_schéma.grid(column=0, row=9)
+        self.curseur_lambda.grid(column=0, row=7)
         bouton_onde.configure(text="Valider", command=self.add_onde)
         
 
     def add_onde(self):
-        if affichage.sequence == 0:
-            lamb=int(self.curseur_lambda.get())*10**(-9)
-            bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)
-            affichage.lamb.append(lamb)
-            self.curseur_lambda.grid_forget()
+        lamb=int(self.curseur_lambda.get())*10**(-9)
+        affichage.lamb.append(lamb)
+        
+        affichage.update_var()
+        affichage.lamb.append(lamb)
+        simulation()
+        print(affichage.lamb)
             
-            longueur_onde = 1
-            
-        else:
-            lamb=int(self.curseur_lambda.get())*10**(-9)
-            bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)
-            affichage.update_var()
-            affichage.lamb.append(lamb)
-            simulation()
-            print(affichage.lamb)
-            self.curseur_lambda.grid_forget()
+        bouton_onde.configure(text='Nouvelle onde', command = self.param_onde)    
+        self.curseur_lambda.grid_forget()
         
   
 def simulation():
@@ -221,7 +215,7 @@ def simulation():
     else:
         if affichage.sequence == 0:
             affichage.sequence = 1
-            fenetre.geometry("580x728")
+            fenetre.geometry("630x728")
         
         affichage.update_var()
         ordre_poly=affichage.interferences.ordrepoly(affichage.lamb)
@@ -234,10 +228,13 @@ def effacer():
         print(affichage.lamb)
         affichage.fig_graph.clf()
 
-first_button_active = 1
+def affiche_sch():
+    new_fen = Tk()
+    
+
 
 fenetre = Tk()
-fenetre.geometry("180x728")
+fenetre.geometry("200x528")
 fenetre.resizable(width=0, height=0)
 
 frame_HG = Frame(fenetre)
@@ -255,33 +252,28 @@ interface_onde = Interface_onde()
 #scale_lambda = Scale(frame_HD, orient=HORIZONTAL, label="Longueur d'onde", length=130, from_=400, to=800)
 #scale_lambda.grid(column=0, row=0)
 
-scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=130, from_=1, to=10)
+scale_nombre_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Nombre de fentes", length=190, from_=1, to=10)
 scale_nombre_fentes.grid(column=0, row=1)
 
-scale_taille_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes", length=130, from_=1, to=1000)
+scale_taille_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Taille des fentes [micron]", length=190, from_=1, to=1000)
 scale_taille_fentes.grid(column=0, row=2)
 
-scale_distance_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Distance interfentes", length=130, from_=10, to=1000, resolution=10)
+scale_distance_fentes = Scale(frame_HD, orient=HORIZONTAL, label="Distance interfentes[micron]", length=190, from_=10, to=1000, resolution=10)
 scale_distance_fentes.grid(column=0, row=3)
 
-scale_angle = Scale(frame_HD, orient=HORIZONTAL, label="Angle", length=130)
+scale_angle = Scale(frame_HD, orient=HORIZONTAL, label="Angle [en °]", length=190, from_=0, to=85)
 scale_angle.grid(column=0, row=4)
 
-scale_focale = Scale(frame_HD, orient=HORIZONTAL, label="Distance focale [cm]", length=130, from_=40, to=160)
+scale_focale = Scale(frame_HD, orient=HORIZONTAL, label="Distance focale [cm]", length=170, from_=40, to=190)
 scale_focale.grid(column=0, row=5)
 
-txt_contraste = Label(frame_HD, text="Contraste: []")
-txt_contraste.grid(column=0, row=6)
-
 bouton_onde= Button(frame_HD, text='Ajouter une onde', command = interface_onde.param_onde)
-bouton_onde.grid(column=0, row=7)
-
-bouton = Button(frame_HD, text='Nouvelle simulation', command = simulation)
-bouton.grid(column=0, row=8)
+bouton_onde.grid(column=0, row=6)
 
 bouton_supp = Button(frame_HD, text='Effacer mémoire', command = effacer)
-bouton.grid(column=0, row=9)
+bouton_supp.grid(column=0, row=7)
 
-
+bouton_schéma = Button(frame_HD, text='Afficher schéma', command = affiche_sch)
+bouton_schéma.grid(column=0, row=8)
 
 fenetre.mainloop()
